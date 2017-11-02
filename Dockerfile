@@ -29,7 +29,7 @@ VOLUME $NGINX_HTPASSWD
 # Copy required files and fix permissions
 #########################################
 
-COPY src/* /root/
+COPY src/ /root/
 
 # Create missing directories
 ############################

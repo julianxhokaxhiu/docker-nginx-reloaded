@@ -76,6 +76,11 @@ RUN curl https://get.acme.sh | sh
 RUN npm install --only=prod --no-optional -g dynsdjs \
     && npm install --only=prod --no-optional -g dynsdjs-plugin-docker
 
+# Add the referral-spam.conf to nginx
+#####################################
+
+ADD https://raw.githubusercontent.com/Stevie-Ray/referrer-spam-blocker/master/referral-spam.conf /etc/nginx/
+
 # Cleanup
 #########
 

@@ -19,11 +19,6 @@ ENV DNSALT2 '8.8.4.4'
 ENV DNS6ALT1 '2001:4860:4860::8888'
 ENV DNS6ALT2 '2001:4860:4860::8844'
 
-# Change this cron rule to what fits best for you.
-# Used only if ENABLE_ADBLOCK=true
-# By Default runs twice a day: At 7:00 UTC and at 19:00 UTC
-ENV CRONTAB_TIME '0 7,19 * * *'
-
 # Create Volume entry points
 ############################
 

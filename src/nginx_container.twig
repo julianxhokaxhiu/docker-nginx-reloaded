@@ -68,6 +68,14 @@ server {
     include {{ vhostServerPath }};
   }
 
+  location /.well-known/acme-challenge/ {
+    auth_basic off;
+    allow all;
+    root /var/www/localhost/htdocs;
+    try_files $uri =404;
+    break;
+  }
+
   location / {
     {# Define rule for reverse proxy #}
     {% if proto == 'uwsgi' %}

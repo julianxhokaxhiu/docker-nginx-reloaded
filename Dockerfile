@@ -46,8 +46,8 @@ WORKDIR /root
 # Fix permissions
 #################
 
-RUN chmod 0644 * \
-    && chmod 0755 *.sh
+RUN chmod -R 0644 * \
+    && chmod -R 0755 *.sh
 
 # Install required packages
 ##############################

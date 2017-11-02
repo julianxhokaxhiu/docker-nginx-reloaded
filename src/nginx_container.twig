@@ -1,0 +1,128 @@
+{% set certName = 'default' %}
+{% set proto = 'http' %}
+{% set httpsMethod = 'redirect' %}
+
+{# Fetch ENV informations #}
+{% for env in container.envs %}
+  {% if 'CERT_NAME' in env %}
+    {% set envArray = env|split('=') %}
+    {% set certName = envArray[1] %}
+  {% elseif 'VIRTUAL_PROTO' in env %}
+    {% set envArray = env|split('=') %}
+    {% set proto = envArray[1] %}
+  {% elseif 'HTTPS_METHOD' in env %}
+    {% set envArray = env|split('=') %}
+    {% set httpsMethod = envArray[1] %}
+  {% endif %}
+{% endfor %}
+
+{# Create server entries based on the current domain list #}
+{% for domain in container.domain|split(',') %}
+  {# domain may contain a port, if so split the string and fix variables values to contain only the appropriate value #}
+  {% set httpPort = 80 %}
+  {% if ':' in domain %}
+    {% set domainArray = domain|split(':') %}
+    {% set domain = domainArray[0] %}
+    {% set httpPort = domainArray[1] %}
+  {% endif %}
+  {# Utility paths that will be required down below #}
+  {% set crtPath = '/etc/nginx/certs/' ~ domain|default(certName) ~ '.crt' %}
+  {% set keyPath = '/etc/nginx/certs/' ~ domain|default(certName) ~ '.key' %}
+  {% set dhparamPath = '/etc/nginx/certs/' ~ domain|default(certName) ~ '.dhparam.pem' %}
+  {% set vhostServerPath = '/etc/nginx/vhost.d/' ~ domain|default('default') %}
+  {% set vhostLocationPath = '/etc/nginx/vhost.d/' ~ domain|default('default') ~ '_location' %}
+  {% set vhostPasswdPath = '/etc/nginx/htpasswd/' ~ domain|default('default') %}
+server {
+  server_name {{ domain }};
+  listen 80;
+  listen [::]:80;
+
+  {# Block spam bots, returning them an emtpy response #}
+  if ($bad_referer) {
+    return 444;
+  }
+
+  {% if httpsMethod == 'redirect' %}
+  {# This flag will help to know if we must redirect to HTTPS same domain #}
+  set $_must_redirect_to_https 0;
+
+  {# Check if the CRT file exists, if so, set the flag to true #}
+  if (-f {{ crtPath }}) {
+    set $_must_redirect_to_https 1;
+  }
+
+  {# Check if the KEY file exists, if so, set the flag to true #}
+  if (-f {{ keyPath }}) {
+    set $_must_redirect_to_https 1;
+  }
+
+  {# If we are safe to redirect, we will do it #}
+  if ($_must_redirect_to_https) {
+    return 301 https://{{ domain }}$request_uri;
+  }
+  {% endif %}
+
+  {# Import custom rules defined for this vhost, if any #}
+  if (-f {{ vhostServerPath }}) {
+    include {{ vhostServerPath }};
+  }
+
+  location / {
+    {# Define rule for reverse proxy #}
+    {% if proto == 'uwsgi' %}
+    include /etc/nginx/uwsgi_params;
+    uwsgi_pass {{ proto }}://{{ container.A }}:{{ httpPort }};
+    {% else %}
+    proxy_pass {{ proto }}://{{ container.A }}:{{ httpPort }};
+    {% endif %}
+    {# Import custom htpasswd define for this vhost, if any #}
+    if (-f {{ vhostPasswdPath }}) {
+      auth_basic "Restricted {{ domain }}";
+      auth_basic_user_file {{ vhostPasswdPath }};
+    }
+    {# Import custom rules defined for this vhost location, if any #}
+    if (-f {{ vhostLocationPath }}) {
+      include {{ vhostLocationPath }};
+    }
+  }
+}
+
+server {
+  server_name {{ domain }};
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+
+  {# SSL Certificates #}
+  ssl_certificate {{ crtPath }};
+  ssl_certificate_key {{ keyPath }};
+
+  {# Define custom dhparam, if any #}
+  if (-f {{ dhparamPath }}) {
+    ssl_dhparam {{ dhparamPath }};
+  }
+
+  {# Import custom rules defined for this vhost, if any #}
+  if (-f {{ vhostServerPath }}) {
+    include {{ vhostServerPath }};
+  }
+
+  location / {
+    {# Define rule for reverse proxy #}
+    {% if proto == 'uwsgi' %}
+    include /etc/nginx/uwsgi_params;
+    uwsgi_pass {{ proto }}://{{ container.A }}:{{ httpPort }};
+    {% else %}
+    proxy_pass {{ proto }}://{{ container.A }}:{{ httpPort }};
+    {% endif %}
+    {# Import custom htpasswd define for this vhost, if any #}
+    if (-f {{ vhostPasswdPath }}) {
+      auth_basic "Restricted {{ domain }}";
+      auth_basic_user_file {{ vhostPasswdPath }};
+    }
+    {# Import custom rules defined for this vhost location, if any #}
+    if (-f {{ vhostLocationPath }}) {
+      include {{ vhostLocationPath }};
+    }
+  }
+}
+{% endfor %}

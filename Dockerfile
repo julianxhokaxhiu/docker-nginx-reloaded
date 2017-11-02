@@ -104,7 +104,6 @@ RUN ln -sf /proc/1/fd/1 /var/log/docker.log
 # Expose required ports
 #######################
 
-EXPOSE 53
 EXPOSE 53/udp
 EXPOSE 80
 EXPOSE 443

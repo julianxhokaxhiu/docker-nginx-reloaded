@@ -55,6 +55,7 @@ RUN chmod 0644 * \
 RUN apk --update add --no-cache \
     bash \
     curl \
+    openssl \
     # Supervisor Daemon
     supervisor \
     # Nginx Server

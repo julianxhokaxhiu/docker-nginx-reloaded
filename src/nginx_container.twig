@@ -1,3 +1,4 @@
+{% spaceless %}
 {% set certName = 'default' %}
 {% set proto = 'http' %}
 {% set httpsMethod = 'redirect' %}
@@ -126,3 +127,4 @@ server {
   }
 }
 {% endfor %}
+{% endspaceless %}

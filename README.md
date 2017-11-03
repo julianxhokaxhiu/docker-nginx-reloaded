@@ -15,8 +15,8 @@ $ docker run \
     -p 443:443 \
     -v /srv/acme:/etc/acme.le \
     -v /srv/certs:/etc/nginx/certs \
-    -v /srv/vhost:/etc/nginx/vhost.d:ro \
-    -v /srv/htpasswd:/etc/nginx/htpasswd:ro \
+    -v /srv/vhost:/etc/nginx/vhost.d \
+    -v /srv/htpasswd:/etc/nginx/htpasswd \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
     julianxhokaxhiu/docker-nginx-reloaded &>/dev/null
 ```

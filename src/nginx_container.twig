@@ -1,6 +1,7 @@
 {% spaceless %}
 {% set certName = 'default' %}
 {% set proto = 'http' %}
+{% set httpPort = 80 %}
 {% set httpsMethod = 'redirect' %}
 
 {# Fetch ENV informations #}
@@ -14,13 +15,15 @@
   {% elseif 'HTTPS_METHOD' in env %}
     {% set envArray = env|split('=') %}
     {% set httpsMethod = envArray[1] %}
+  {% elseif 'VIRTUAL_PORT' in env %}
+    {% set envArray = env|split('=') %}
+    {% set httpPort = envArray[1] %}
   {% endif %}
 {% endfor %}
 
 {# Create server entries based on the current domain list #}
 {% for domain in container.domain|split(',') %}
   {# domain may contain a port, if so split the string and fix variables values to contain only the appropriate value #}
-  {% set httpPort = 80 %}
   {% if ':' in domain %}
     {% set domainArray = domain|split(':') %}
     {% set domain = domainArray[0] %}

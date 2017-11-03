@@ -81,17 +81,6 @@ RUN npm install --only=prod --no-optional -g dynsdjs \
 
 ADD https://raw.githubusercontent.com/Stevie-Ray/referrer-spam-blocker/master/referral-spam.conf /etc/nginx/
 
-# Generate Self-Signed HTTPS certificate as default
-###################################################
-
-RUN openssl req \
-    -nodes \
-    -days 365 \
-    -newkey rsa:2048 \
-    -keyout /etc/nginx/certs/default.key \
-    -out /etc/nginx/certs/default.crt \
-    -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=localhost"
-
 # Cleanup
 #########
 

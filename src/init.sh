@@ -9,6 +9,15 @@ function sedeasy {
   sed -i "s/$(echo $1 | sed -e 's/\([[\/.*]\|\]\)/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" $3
 }
 
+# Generate Self-Signed HTTPS certificate as default
+openssl req \
+  -nodes \
+  -days 365 \
+  -newkey rsa:2048 \
+  -keyout /etc/nginx/certs/default.key \
+  -out /etc/nginx/certs/default.crt \
+  -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=localhost"
+
 # Fix permissions
 find $NGINX_CERTS -type f -exec chmod 664 {} \;
 find $NGINX_VHOSTD -type f -exec chmod 664 {} \;

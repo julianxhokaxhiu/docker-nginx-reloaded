@@ -10,8 +10,9 @@ function sedeasy {
 }
 
 # Fix permissions
-find $DATA_DIR -type d -exec chmod 775 {} \;
-find $DATA_DIR -type f -exec chmod 664 {} \;
+find $NGINX_CERTS -type f -exec chmod 664 {} \;
+find $NGINX_VHOSTD -type f -exec chmod 664 {} \;
+find $NGINX_HTPASSWD -type f -exec chmod 664 {} \;
 
 # Start supervisor
 /usr/bin/supervisord -c /etc/supervisord.conf

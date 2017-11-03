@@ -17,13 +17,13 @@ for key in "${!CONTAINER_DOMAINS[@]}"; do
   fi
 
   # Generate the SSL certificate
-  acme.sh \
+  /root/.acme.sh/acme.sh \
     --issue \
     -d $DOMAIN \
     -w /var/www/localhost/htdocs
 
   # Install SSL certificate
-  acme.sh \
+  /root/.acme.sh/acme.sh \
     --install-cert \
     -d $DOMAIN \
     --key-file /etc/nginx/certs/$DOMAIN.key \

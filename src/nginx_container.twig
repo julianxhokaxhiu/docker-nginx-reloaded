@@ -44,29 +44,16 @@ server {
   }
 
   {% if httpsMethod == 'redirect' %}
-  {# This flag will help to know if we must redirect to HTTPS same domain #}
-  set $_must_redirect_to_https 0;
-
-  {# Check if the CRT file exists, if so, set the flag to true #}
-  if (-f {{ crtPath }}) {
-    set $_must_redirect_to_https 1;
-  }
-
-  {# Check if the KEY file exists, if so, set the flag to true #}
-  if (-f {{ keyPath }}) {
-    set $_must_redirect_to_https 1;
-  }
-
-  {# If we are safe to redirect, we will do it #}
-  if ($_must_redirect_to_https) {
-    return 301 https://{{ domain }}$request_uri;
-  }
+    {# If we are safe to redirect, we will do it #}
+    {% if crtPath|exists and keyPath|exists %}
+  return 301 https://{{ domain }}$request_uri;
+    {% endif %}
   {% endif %}
 
   {# Import custom rules defined for this vhost, if any #}
-  if (-f {{ vhostServerPath }}) {
-    include {{ vhostServerPath }};
-  }
+  {% if vhostServerPath|exists %}
+  include {{ vhostServerPath }};
+  {% endif %}
 
   location /.well-known/acme-challenge/ {
     auth_basic off;
@@ -84,15 +71,17 @@ server {
     {% else %}
     proxy_pass {{ proto }}://{{ container.A }}:{{ httpPort }};
     {% endif %}
+
     {# Import custom htpasswd define for this vhost, if any #}
-    if (-f {{ vhostPasswdPath }}) {
-      auth_basic "Restricted {{ domain }}";
-      auth_basic_user_file {{ vhostPasswdPath }};
-    }
+    {% if vhostPasswdPath|exists %}
+    auth_basic "Restricted {{ domain }}";
+    auth_basic_user_file {{ vhostPasswdPath }};
+    {% endif %}
+
     {# Import custom rules defined for this vhost location, if any #}
-    if (-f {{ vhostLocationPath }}) {
-      include {{ vhostLocationPath }};
-    }
+    {% if vhostLocationPath|exists %}
+    include {{ vhostLocationPath }};
+    {% endif %}
   }
 }
 
@@ -106,14 +95,14 @@ server {
   ssl_certificate_key {{ keyPath }};
 
   {# Define custom dhparam, if any #}
-  if (-f {{ dhparamPath }}) {
-    ssl_dhparam {{ dhparamPath }};
-  }
+  {% if dhparamPath|exists %}
+  ssl_dhparam {{ dhparamPath }};
+  {% endif %}
 
   {# Import custom rules defined for this vhost, if any #}
-  if (-f {{ vhostServerPath }}) {
+  {% if vhostServerPath|exists %}
     include {{ vhostServerPath }};
-  }
+  {% endif %}
 
   location / {
     {# Define rule for reverse proxy #}
@@ -124,14 +113,14 @@ server {
     proxy_pass {{ proto }}://{{ container.A }}:{{ httpPort }};
     {% endif %}
     {# Import custom htpasswd define for this vhost, if any #}
-    if (-f {{ vhostPasswdPath }}) {
-      auth_basic "Restricted {{ domain }}";
-      auth_basic_user_file {{ vhostPasswdPath }};
-    }
+    {% if vhostPasswdPath|exists %}
+    auth_basic "Restricted {{ domain }}";
+    auth_basic_user_file {{ vhostPasswdPath }};
+    {% endif %}
     {# Import custom rules defined for this vhost location, if any #}
-    if (-f {{ vhostLocationPath }}) {
-      include {{ vhostLocationPath }};
-    }
+    {% if vhostLocationPath|exists %}
+    include {{ vhostLocationPath }};
+    {% endif %}
   }
 }
 {% endfor %}

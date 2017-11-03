@@ -19,10 +19,12 @@ openssl req \
   -out /etc/nginx/certs/default.crt \
   -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=localhost"
 
-# Generate dhparam
-openssl dhparam \
-  -out /etc/nginx/certs/dhparam.pem \
-  4096
+# Generate dhparam only if does not exist, as it takes too much time during startup
+if [ ! -f /etc/nginx/certs/dhparam.pem ]; then
+  openssl dhparam \
+    -out /etc/nginx/certs/dhparam.pem \
+    4096
+fi
 
 # Fix permissions
 find $NGINX_CERTS -type f -exec chmod 664 {} \;

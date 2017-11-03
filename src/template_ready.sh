@@ -2,6 +2,7 @@
 
 CONTAINER_NAME=$1
 CONTAINER_DOMAIN=$2
+CONTAINER_ISVHOST=$3
 
 # If CONTAINER_DOMAIN is CSV, we split by comma, in order to get an array
 IFS=, read -ra CONTAINER_DOMAINS <<< "$CONTAINER_DOMAIN"
@@ -10,8 +11,8 @@ IFS=, read -ra CONTAINER_DOMAINS <<< "$CONTAINER_DOMAIN"
 for key in "${!CONTAINER_DOMAINS[@]}"; do
   DOMAIN=$CONTAINER_DOMAINS[$key]
 
-  # If it is a valid FQDN then process for SSL generation
-  if [[ ! -z `echo $DOMAIN | grep -P '(?=^.{1,254}$)(^(?>(?!\d+\.)[a-zA-Z0-9_\-]{1,63}\.?)+(?:[a-zA-Z]{2,})$)'` ]]; then
+  # If the container contains a VIRTUAL_HOST entry, then generate the SSL
+  if [[ $CONTAINER_ISVHOST ]]; then
     # Domain may be declared with a port, if so, get only the domain value
     if [[ $DOMAIN == *":"* ]]; then
       IFS=, read -ra TMP <<< "$DOMAIN"

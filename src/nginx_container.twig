@@ -3,6 +3,7 @@
 {% set proto = 'http' %}
 {% set httpPort = 80 %}
 {% set httpsMethod = 'redirect' %}
+{% set isvHost = false %}
 
 {# Fetch ENV informations #}
 {% for env in container.envs %}
@@ -18,9 +19,12 @@
   {% elseif 'VIRTUAL_PORT' in env %}
     {% set envArray = env|split('=') %}
     {% set httpPort = envArray[1] %}
+  {% elseif 'VIRTUAL_HOST' in env %}
+    {% set isvHost = true %}
   {% endif %}
 {% endfor %}
 
+{% if isvHost %}
 {# Create server entries based on the current domain list #}
 {% for domain in container.domain|split(',') %}
   {# domain may contain a port, if so split the string and fix variables values to contain only the appropriate value #}
@@ -129,4 +133,5 @@ server {
 }
 {% endif %}
 {% endfor %}
+{% endif %}
 {% endspaceless %}

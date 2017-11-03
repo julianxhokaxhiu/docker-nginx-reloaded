@@ -7,6 +7,7 @@ MAINTAINER Julian Xhokaxhiu <info at julianxhokaxhiu dot com>
 ENV NGINX_CERTS /etc/nginx/certs
 ENV NGINX_VHOSTD /etc/nginx/vhost.d
 ENV NGINX_HTPASSWD /etc/nginx/htpasswd
+ENV LE_CONFIG_HOME /etc/acme.le
 
 # Configurable environment variables
 ####################################
@@ -25,6 +26,7 @@ ENV DNS6ALT2 '2001:4860:4860::8844'
 VOLUME $NGINX_CERTS
 VOLUME $NGINX_VHOSTD
 VOLUME $NGINX_HTPASSWD
+VOLUME $LE_CONFIG_HOME
 
 # Copy required files and fix permissions
 #########################################
@@ -37,6 +39,7 @@ COPY src/ /root/
 RUN mkdir -p $NGINX_CERTS \
     mkdir -p $NGINX_VHOSTD \
     mkdir -p $NGINX_HTPASSWD \
+    mkdir -p $LE_CONFIG_HOME \
     mkdir -p /run/nginx
 
 # Set the work directory

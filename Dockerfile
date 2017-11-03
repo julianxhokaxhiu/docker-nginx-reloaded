@@ -58,6 +58,7 @@ RUN apk --update add --no-cache \
     curl \
     openssl \
     libidn \
+    vim \
     # Supervisor Daemon
     supervisor \
     # Nginx Server

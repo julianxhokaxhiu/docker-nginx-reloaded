@@ -19,6 +19,11 @@ openssl req \
   -out /etc/nginx/certs/default.crt \
   -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=localhost"
 
+# Generate dhparam
+openssl dhparam \
+  -out /etc/nginx/certs/dhparam.pem \
+  4096
+
 # Fix permissions
 find $NGINX_CERTS -type f -exec chmod 664 {} \;
 find $NGINX_VHOSTD -type f -exec chmod 664 {} \;

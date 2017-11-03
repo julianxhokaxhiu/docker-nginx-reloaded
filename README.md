@@ -1,5 +1,5 @@
 # docker-nginx-reloaded
-Docker container with Nginx, acme.sh, DNS and Autodiscovery ( alternative to jwilder/nginx-proxy )
+Reverse Proxy Docker container with Nginx, acme.sh, DNS and Autodiscovery ( alternative to jwilder/nginx-proxy )
 
 ---
 

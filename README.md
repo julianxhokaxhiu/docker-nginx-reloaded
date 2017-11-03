@@ -13,6 +13,7 @@ $ docker run \
     -p 172.17.0.1:53:53/udp \
     -p 80:80 \
     -p 443:443 \
+    -v /srv/acme:/etc/acme.le \
     -v /srv/certs:/etc/nginx/certs \
     -v /srv/vhost:/etc/nginx/vhost.d:ro \
     -v /srv/htpasswd:/etc/nginx/htpasswd:ro \

@@ -36,7 +36,8 @@ COPY src/ /root/
 
 RUN mkdir -p $NGINX_CERTS \
     mkdir -p $NGINX_VHOSTD \
-    mkdir -p $NGINX_HTPASSWD
+    mkdir -p $NGINX_HTPASSWD \
+    mkdir -p /run/nginx
 
 # Set the work directory
 ########################

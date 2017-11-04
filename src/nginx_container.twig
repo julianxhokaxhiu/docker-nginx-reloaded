@@ -50,13 +50,6 @@ server {
     return 444;
   }
 
-  {% if httpsMethod == 'redirect' %}
-    {# If we are safe to redirect, we will do it #}
-    {% if crtPath|exists and keyPath|exists %}
-  return 301 https://{{ domain }}$request_uri;
-    {% endif %}
-  {% endif %}
-
   {# Import custom rules defined for this vhost, if any #}
   {% if vhostServerPath|exists %}
   include {{ vhostServerPath }};
@@ -71,6 +64,13 @@ server {
   }
 
   location / {
+    {% if httpsMethod == 'redirect' %}
+    {# If we are safe to redirect, we will do it #}
+      {% if crtPath|exists and keyPath|exists %}
+    return 301 https://{{ domain }}$request_uri;
+      {% endif %}
+    {% endif %}
+
     {# Define rule for reverse proxy #}
     {% if proto == 'uwsgi' %}
     include /etc/nginx/uwsgi_params;

@@ -65,29 +65,29 @@ server {
 
   location / {
     {% if httpsMethod == 'redirect' %}
-    {# If we are safe to redirect, we will do it #}
+      {# If we are safe to redirect, we will do it #}
       {% if crtPath|exists and keyPath|exists %}
     return 301 https://{{ domain }}$request_uri;
       {% endif %}
-    {% endif %}
-
-    {# Define rule for reverse proxy #}
-    {% if proto == 'uwsgi' %}
+    {% else %}
+      {# Define rule for reverse proxy #}
+      {% if proto == 'uwsgi' %}
     include /etc/nginx/uwsgi_params;
     uwsgi_pass {{ proto }}://{{ container.A }}:{{ httpPort }};
-    {% else %}
+      {% else %}
     proxy_pass {{ proto }}://{{ container.A }}:{{ httpPort }};
-    {% endif %}
+      {% endif %}
 
-    {# Import custom htpasswd define for this vhost, if any #}
-    {% if vhostPasswdPath|exists %}
+      {# Import custom htpasswd define for this vhost, if any #}
+      {% if vhostPasswdPath|exists %}
     auth_basic "Restricted {{ domain }}";
     auth_basic_user_file {{ vhostPasswdPath }};
-    {% endif %}
+      {% endif %}
 
-    {# Import custom rules defined for this vhost location, if any #}
-    {% if vhostLocationPath|exists %}
+      {# Import custom rules defined for this vhost location, if any #}
+      {% if vhostLocationPath|exists %}
     include {{ vhostLocationPath }};
+      {% endif %}
     {% endif %}
   }
 }

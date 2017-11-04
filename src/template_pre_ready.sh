@@ -33,6 +33,3 @@ for key in "${!CONTAINER_DOMAINS[@]}"; do
       --fullchain-file /etc/nginx/certs/$DOMAIN.crt
   fi
 done
-
-# Reload nginx service
-nginx -s reload

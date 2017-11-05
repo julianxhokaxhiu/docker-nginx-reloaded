@@ -22,9 +22,8 @@ openssl req \
 # Generate dhparam only if does not exist, as it takes too much time during startup
 if [ ! -f /etc/nginx/certs/dhparam.pem ]; then
   openssl dhparam \
-    -dsaparam \
     -out /etc/nginx/certs/dhparam.pem \
-    4096
+    2048
 fi
 
 # Fix permissions

@@ -64,11 +64,9 @@ server {
   }
 
   location / {
-    {% if httpsMethod == 'redirect' %}
-      {# If we are safe to redirect, we will do it #}
-      {% if crtPath|exists and keyPath|exists %}
+    {# If we are safe to redirect, we will do it #}
+    {% if httpsMethod == 'redirect' and crtPath|exists and keyPath|exists %}
     return 301 https://{{ domain }}$request_uri;
-      {% endif %}
     {% else %}
       {# Define rule for reverse proxy #}
       {% if proto == 'uwsgi' %}

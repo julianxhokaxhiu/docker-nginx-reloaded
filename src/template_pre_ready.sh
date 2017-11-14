@@ -25,13 +25,11 @@ for key in "${!CONTAINER_DOMAINS[@]}"; do
       -d $DOMAIN \
       -w /var/www/localhost/htdocs
 
-    if [ $? -eq 0 ]; then
-      # Install SSL certificate
-      /root/.acme.sh/acme.sh \
-        --install-cert \
-        -d $DOMAIN \
-        --key-file /etc/nginx/certs/$DOMAIN.key \
-        --fullchain-file /etc/nginx/certs/$DOMAIN.crt
-    fi
+    # Install SSL certificate
+    /root/.acme.sh/acme.sh \
+      --install-cert \
+      -d $DOMAIN \
+      --key-file /etc/nginx/certs/$DOMAIN.key \
+      --fullchain-file /etc/nginx/certs/$DOMAIN.crt
   fi
 done

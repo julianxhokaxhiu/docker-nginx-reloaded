@@ -33,7 +33,7 @@ done
 # Generate the SSL certificate
 /root/.acme.sh/acme.sh \
   --issue \
-  --keylength 4096 \
+  --keylength ec-384 \
   -d $ACMESH_DOMAINS \
   -w /var/www/localhost/htdocs
 

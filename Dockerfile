@@ -59,7 +59,7 @@ RUN chmod -R 0644 * \
 RUN apk --update add --no-cache \
     bash \
     curl \
-    openssl \
+    libressl \
     libidn \
     vim \
     # Supervisor Daemon

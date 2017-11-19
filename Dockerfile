@@ -64,6 +64,7 @@ RUN apk --update add --no-cache \
     libressl \
     libidn \
     vim \
+    socat \
     # Supervisor Daemon
     supervisor \
     # Nginx Server

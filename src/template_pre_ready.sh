@@ -62,7 +62,7 @@ for key in "${!CONTAINER_DOMAINS[@]}"; do
         --fullchain-file /etc/nginx/certs/$DOMAIN.crt
 
       # Copy OCSP chain file
-      cp $LE_CONFIG_HOME/$DOMAIN/ca.cer /etc/nginx/certs/$DOMAIN.chain.pem
+      cp $LE_CONFIG_HOME/${DOMAIN}_ecc/ca.cer /etc/nginx/certs/$DOMAIN.chain.pem
     fi
   fi
 done

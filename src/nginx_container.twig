@@ -37,6 +37,7 @@
   {% set crtPath = '/etc/nginx/certs/' ~ domain|default(certName) ~ '.crt' %}
   {% set keyPath = '/etc/nginx/certs/' ~ domain|default(certName) ~ '.key' %}
   {% set dhparamPath = '/etc/nginx/certs/' ~ domain|default(certName) ~ '.dhparam.pem' %}
+  {% set chainPath = '/etc/nginx/certs/' ~ domain|default(certName) ~ '.chain.pem' %}
   {% set vhostServerPath = '/etc/nginx/vhost.d/' ~ domain|default('default') %}
   {% set vhostLocationPath = '/etc/nginx/vhost.d/' ~ domain|default('default') ~ '_location' %}
   {% set vhostPasswdPath = '/etc/nginx/htpasswd/' ~ domain|default('default') %}
@@ -103,6 +104,13 @@ server {
   {# Define custom dhparam, if any #}
   {% if dhparamPath|exists %}
   ssl_dhparam {{ dhparamPath }};
+  {% endif %}
+
+  {# Define OCSP Stapling, if any #}
+  {% if chainPath|exists %}
+  ssl_stapling on;
+  ssl_stapling_verify on;
+  ssl_trusted_certificate {{ chainPath }};
   {% endif %}
 
   {# Import custom rules defined for this vhost, if any #}

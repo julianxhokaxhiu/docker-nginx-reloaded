@@ -57,6 +57,7 @@ for key in "${!CONTAINER_DOMAINS[@]}"; do
       # Install SSL certificate
       /root/.acme.sh/acme.sh \
         --install-cert \
+        --ecc \
         -d $DOMAIN \
         --key-file /etc/nginx/certs/$DOMAIN.key \
         --fullchain-file /etc/nginx/certs/$DOMAIN.crt

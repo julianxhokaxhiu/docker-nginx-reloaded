@@ -14,7 +14,7 @@ openssl req \
   -x509 \
   -nodes \
   -days 365 \
-  -newkey rsa:2048 \
+  -newkey rsa:4096 \
   -keyout /etc/nginx/certs/default.key \
   -out /etc/nginx/certs/default.crt \
   -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=localhost"
@@ -23,7 +23,7 @@ openssl req \
 if [ ! -f /etc/nginx/certs/dhparam.pem ]; then
   openssl dhparam \
     -out /etc/nginx/certs/dhparam.pem \
-    2048
+    4096
 fi
 
 # Cleanup existing configurations ( in order to allow Nginx to start clean )

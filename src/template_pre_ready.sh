@@ -51,7 +51,8 @@ for key in "${!CONTAINER_DOMAINS[@]}"; do
       DOMAIN=${TMP[0]}
     fi
 
-    if [ $ACMESH_SUCCESSFUL -eq 0 ]; then
+    # ACMESH_SUCCESSFUL can be 0 ( successful ) or 2 ( no need to renew )
+    if [ $ACMESH_SUCCESSFUL -eq 0 ] || [ $ACMESH_SUCCESSFUL -eq 2 ]; then
       # Install SSL certificate
       /root/.acme.sh/acme.sh \
         --install-cert \

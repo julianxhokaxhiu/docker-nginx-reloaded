@@ -8,6 +8,8 @@ ENV NGINX_CERTS /etc/nginx/certs
 ENV NGINX_VHOSTD /etc/nginx/vhost.d
 ENV NGINX_HTPASSWD /etc/nginx/htpasswd
 ENV LE_CONFIG_HOME /etc/acme.le
+ENV DEFAULT_ACCOUNT_KEY_LENGTH 4096
+ENV DEFAULT_DOMAIN_KEY_LENGTH 4096
 
 # Configurable environment variables
 ####################################

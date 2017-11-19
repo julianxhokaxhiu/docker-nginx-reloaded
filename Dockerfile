@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM nginx:alpine
 MAINTAINER Julian Xhokaxhiu <info at julianxhokaxhiu dot com>
 
 # Environment variables
@@ -67,8 +67,6 @@ RUN apk --update add --no-cache \
     socat \
     # Supervisor Daemon
     supervisor \
-    # Nginx Server
-    nginx \
     # NodeJS
     nodejs \
     # NPM

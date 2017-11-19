@@ -4,10 +4,13 @@ CONTAINER_NAME=$1
 CONTAINER_DOMAIN=$2
 CONTAINER_ISVHOST=$3
 
+# acme.sh multi-domain holder
+ACMESH_DOMAINS=""
+
 # If CONTAINER_DOMAIN is CSV, we split by comma, in order to get an array
 IFS=, read -ra CONTAINER_DOMAINS <<< "$CONTAINER_DOMAIN"
 
-# Generate SSL certificates
+# Generate list of domains
 for key in "${!CONTAINER_DOMAINS[@]}"; do
   DOMAIN=${CONTAINER_DOMAINS[$key]}
 
@@ -19,13 +22,36 @@ for key in "${!CONTAINER_DOMAINS[@]}"; do
       DOMAIN=${TMP[0]}
     fi
 
-    # Generate the SSL certificate
-    /root/.acme.sh/acme.sh \
-      --issue \
-      -d $DOMAIN \
-      -w /var/www/localhost/htdocs
+    if [ -z "$ACMESH_DOMAINS" ]; then
+      ACMESH_DOMAINS="$DOMAIN"
+    else
+      ACMESH_DOMAINS="${ACMESH_DOMAINS} -d $DOMAIN"
+    fi
+  fi
+done
 
-    if [ $? -eq 0 ]; then
+# Generate the SSL certificate
+/root/.acme.sh/acme.sh \
+  --issue \
+  -d $ACMESH_DOMAINS \
+  -w /var/www/localhost/htdocs
+
+# Successful flag for the issue command
+ACMESH_SUCCESSFUL=$?
+
+# Install SSL certificates
+for key in "${!CONTAINER_DOMAINS[@]}"; do
+  DOMAIN=${CONTAINER_DOMAINS[$key]}
+
+  # If the container contains a VIRTUAL_HOST entry, then generate the SSL
+  if [[ $CONTAINER_ISVHOST == 1 ]]; then
+    # Domain may be declared with a port, if so, get only the domain value
+    if [[ $DOMAIN == *":"* ]]; then
+      IFS=, read -ra TMP <<< "$DOMAIN"
+      DOMAIN=${TMP[0]}
+    fi
+
+    if [ $ACMESH_SUCCESSFUL -eq 0 ]; then
       # Install SSL certificate
       /root/.acme.sh/acme.sh \
         --install-cert \

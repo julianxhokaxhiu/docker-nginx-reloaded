@@ -26,6 +26,9 @@ if [ ! -f /etc/nginx/certs/dhparam.pem ]; then
     2048
 fi
 
+# Cleanup existing configurations ( in order to allow Nginx to start clean )
+rm -Rf ${NGINX_VHOSTD}/*.conf
+
 # Fix permissions
 find $NGINX_CERTS -type f -exec chmod 664 {} \;
 find $NGINX_VHOSTD -type f -exec chmod 664 {} \;

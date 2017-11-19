@@ -108,6 +108,8 @@ server {
 
   {# Define OCSP Stapling, if any #}
   {% if chainPath|exists %}
+  ssl_stapling on;
+  ssl_stapling_verify on;
   ssl_trusted_certificate {{ chainPath }};
   {% endif %}
 

@@ -93,7 +93,10 @@ server {
     include {{ vhostLocationPath }};
       {% endif %}
     {% endif %}
+    include /etc/nginx/location.conf;
   }
+
+  include /etc/nginx/server.conf;
 }
 
 {% if crtPath|exists and keyPath|exists %}
@@ -140,7 +143,10 @@ server {
     {% if vhostLocationPath|exists %}
     include {{ vhostLocationPath }};
     {% endif %}
+    include /etc/nginx/location.conf;
   }
+
+  include /etc/nginx/server.conf;
 }
 {% endif %}
 {% endfor %}

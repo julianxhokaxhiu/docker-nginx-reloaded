@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM nginx:stable-alpine
 MAINTAINER Julian Xhokaxhiu <info at julianxhokaxhiu dot com>
 
 # Environment variables

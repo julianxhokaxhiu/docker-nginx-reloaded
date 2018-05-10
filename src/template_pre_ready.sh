@@ -6,6 +6,7 @@ CONTAINER_ISVHOST=$3
 
 # acme.sh multi-domain holder
 ACMESH_DOMAINS=""
+ACMESH_MULTI=0
 
 # If CONTAINER_DOMAIN is CSV, we split by comma, in order to get an array
 IFS=, read -ra CONTAINER_DOMAINS <<< "$CONTAINER_DOMAIN"
@@ -24,6 +25,7 @@ for key in "${!CONTAINER_DOMAINS[@]}"; do
 
     if [ -z "$ACMESH_DOMAINS" ]; then
       ACMESH_DOMAINS="$DOMAIN"
+      ACMESH_MULTI_MAIN_DOMAIN="$DOMAIN"
     else
       ACMESH_DOMAINS="${ACMESH_DOMAINS} -d $DOMAIN"
     fi
@@ -63,7 +65,7 @@ for key in "${!CONTAINER_DOMAINS[@]}"; do
         --fullchain-file /etc/nginx/certs/$DOMAIN.crt
 
       # Copy OCSP chain file
-      cp $LE_CONFIG_HOME/${DOMAIN}_ecc/ca.cer /etc/nginx/certs/$DOMAIN.chain.pem
+      cp -f $LE_CONFIG_HOME/${ACMESH_MULTI_MAIN_DOMAIN}_ecc/ca.cer /etc/nginx/certs/$ACMESH_MULTI_MAIN_DOMAIN.chain.pem
     fi
   fi
 done

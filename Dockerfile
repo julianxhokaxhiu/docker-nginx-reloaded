@@ -68,7 +68,8 @@ RUN apk --update add --no-cache \
     # Supervisor Daemon
     supervisor \
     # NodeJS + NPM
-    nodejs
+    nodejs \
+    npm
 
 # Install the acme.sh client
 ############################

@@ -65,7 +65,7 @@ RUN chmod -R 0644 * \
 RUN apk --update add --no-cache \
     bash \
     curl \
-    libressl \
+    openssl \
     libidn \
     vim \
     socat \
@@ -78,13 +78,13 @@ RUN apk --update add --no-cache \
 # Install the acme.sh client
 ############################
 
-RUN curl https://get.acme.sh | sh
+RUN curl -s https://get.acme.sh | sh
 
 # Install dynsdjs + docker plugin
 #################################
 
-RUN npm install --only=prod --no-optional -g dynsdjs \
-    && npm install --only=prod --no-optional -g dynsdjs-plugin-docker
+RUN npm install --omit=dev --omit=optional -g dynsdjs \
+    && npm install --omit=dev --omit=optional -g dynsdjs-plugin-docker
 
 # Add the referral-spam.conf to nginx
 #####################################

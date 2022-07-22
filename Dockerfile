@@ -1,4 +1,5 @@
 FROM nginx:stable-alpine
+
 MAINTAINER Julian Xhokaxhiu <info at julianxhokaxhiu dot com>
 
 # Environment variables
@@ -21,6 +22,9 @@ ENV DNSALT1 '8.8.8.8'
 ENV DNSALT2 '8.8.4.4'
 ENV DNS6ALT1 '2001:4860:4860::8888'
 ENV DNS6ALT2 '2001:4860:4860::8844'
+
+# Allow to disable LE
+ENV LE_ACME_ENABLE 1
 
 # Create Volume entry points
 ############################

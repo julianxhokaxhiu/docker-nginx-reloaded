@@ -1,5 +1,5 @@
 {% spaceless %}
-{% set certName = 'default' %}
+{% set certName = '' %}
 {% set proto = 'http' %}
 {% set httpPort = 80 %}
 {% set httpsMethod = 'redirect' %}
@@ -35,14 +35,12 @@
     {% set httpPort = domainArray[1] %}
   {% endif %}
   {# If it is multi domain, use only the first one #}
-  {% if mainDomain is empty %}
-    {% set mainDomain = domain %}
-  {% endif %}
+  {% set mainDomain = domain %}
   {# Utility paths that will be required down below #}
-  {% set crtPath = '/etc/nginx/certs/' ~ mainDomain|default(certName) ~ '.crt' %}
-  {% set keyPath = '/etc/nginx/certs/' ~ mainDomain|default(certName) ~ '.key' %}
-  {% set dhparamPath = '/etc/nginx/certs/' ~ mainDomain|default(certName) ~ '.dhparam.pem' %}
-  {% set chainPath = '/etc/nginx/certs/' ~ mainDomain|default(certName) ~ '.chain.pem' %}
+  {% set crtPath = '/etc/nginx/certs/' ~ certName|default(mainDomain) ~ '.crt' %}
+  {% set keyPath = '/etc/nginx/certs/' ~ certName|default(mainDomain) ~ '.key' %}
+  {% set dhparamPath = '/etc/nginx/certs/' ~ certName|default(mainDomain) ~ '.dhparam.pem' %}
+  {% set chainPath = '/etc/nginx/certs/' ~ certName|default(mainDomain) ~ '.chain.pem' %}
   {% set vhostServerPath = '/etc/nginx/vhost.d/' ~ domain|default('default') %}
   {% set vhostLocationPath = '/etc/nginx/vhost.d/' ~ domain|default('default') ~ '_location' %}
   {% set vhostPasswdPath = '/etc/nginx/htpasswd/' ~ domain|default('default') %}
